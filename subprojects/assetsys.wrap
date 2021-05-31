@@ -1,0 +1,10 @@
+[wrap-git]
+directory = assetsys
+url = https://github.com/evol3d/libs
+revision = main
+depth = 1
+
+patch_directory = assetsys
+
+[provide]
+dependency_names = assetsys

@@ -1,0 +1,7 @@
+[wrap-git]
+directory = evmod_ecs
+url = https://github.com/evol3D/evol-mod-flecs.git
+revision = master
+
+[provide]
+dependency_names = evmod_ecs

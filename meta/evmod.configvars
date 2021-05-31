@@ -1,0 +1,1 @@
+EV_CONFIG_VAR(resource_directory, STRING, ".")

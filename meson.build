@@ -7,8 +7,13 @@ dst = meson.current_source_dir() + '/import/'
 run_command( 'python3', meson.source_root() + '/subprojects/evol/buildscripts/copy.py', src, dst)
 subdir('import')
 
+subproject('evmod_ecs')
+
 mod_src = [
   'src/mod.c',
+
+  # Loaders
+  'src/loaders/TextLoader/TextLoader.c',
 ]
 
 mod_incdir = [
@@ -17,6 +22,9 @@ mod_incdir = [
 
 mod_deps = [
   evmod_deps,
+
+  dependency('assetsys'),
+  dependency('evmod_ecs'),
 ]
 
 module = shared_module(

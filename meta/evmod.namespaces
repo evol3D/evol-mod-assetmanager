@@ -1,0 +1,18 @@
+EV_NS_DEF_BEGIN(Asset)
+EV_NS_DEF_FN(AssetHandle, load, (CONST_STR, path))
+EV_NS_DEF_FN(AssetHandle, cloneHandle, (AssetHandle, handle))
+EV_NS_DEF_FN(void, free, (AssetHandle, handle))
+EV_NS_DEF_END(Asset)
+
+
+EV_NS_DEF_BEGIN(AssetManager)
+EV_NS_DEF_FN(void, mount, (CONST_STR, path), (CONST_STR, as))
+EV_NS_DEF_END(AssetManager)
+
+/* #include LOADERS_NAMESPACES_H */
+
+EV_NS_DEF_BEGIN(TextLoader)
+
+EV_NS_DEF_FN(TextAsset, loadAsset, (AssetHandle, handle))
+
+EV_NS_DEF_END(TextLoader)
