@@ -29,8 +29,20 @@ void
 onRemoveAssetComponent(
     ECSQuery query)
 {
-  Asset *asset = ECS->getQueryColumn(query, sizeof(Asset), 1);
-  aligned_free(asset->data);
+  Asset *assets = ECS->getQueryColumn(query, sizeof(Asset), 1);
+  for(int i = 0; i < ECS->getQueryMatchCount(query); i++) {
+    aligned_free(assets[i].data);
+  }
+}
+
+void
+onRemoveTextAsset(
+    ECSQuery query)
+{
+  TextAsset *assets = ECS->getQueryColumn(query, sizeof(TextAsset), 1);
+  for(int i = 0; i < ECS->getQueryMatchCount(query); i++) {
+    ev_textloader_textasset_destr(assets[i]);
+  }
 }
 
 EV_CONSTRUCTOR
@@ -47,6 +59,9 @@ EV_CONSTRUCTOR
 
       AssetManagerData.assetcomponent_id = AssetECS->registerComponent("Asset", sizeof(Asset), EV_ALIGNOF(Asset));
       AssetECS->setOnRemoveTrigger("AssetComponentOnRemove", "Asset", onRemoveAssetComponent);
+
+      ev_textloader_setassettype(AssetECS->registerComponent("TextAsset", sizeof(TextAsset), EV_ALIGNOF(TextAsset)));
+      AssetECS->setOnRemoveTrigger("TextAssetOnRemove", "TextAsset", onRemoveTextAsset);
     }
   }
 
@@ -122,6 +137,15 @@ ev_asset_getfromhandle(
     AssetHandle handle)
 {
   return AssetECS->getComponent(AssetManagerData.world, handle, AssetManagerData.assetcomponent_id);
+}
+
+void
+ev_asset_markas(
+    AssetHandle handle, 
+    GenericHandle assetType, 
+    PTR data)
+{
+  AssetECS->setComponent(AssetManagerData.world, handle, assetType, data);
 }
 
 EV_BINDINGS

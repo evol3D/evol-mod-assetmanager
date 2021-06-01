@@ -3,6 +3,5 @@ TYPE(AssetHandle, GenericHandle)
 /* #include LOADERS_TYPES_H */
 
 TYPE(TextAsset, struct {
-  CONST_STR text;
-  U64 length;
+  evstring text;
 })
