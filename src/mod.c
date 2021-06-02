@@ -140,10 +140,11 @@ ev_asset_free(
 
 void
 ev_assetmanager_mount(
-  CONST_STR path,
-  CONST_STR as)
+  evstring *path,
+  evstring *as)
 {
-  AssetSysCheck(assetsys_mount(AssetManagerData.sys, path, as));
+  evstring_pushstr(as, ":/");
+  AssetSysCheck(assetsys_mount(AssetManagerData.sys, *path, *as));
 }
 
 const Asset *

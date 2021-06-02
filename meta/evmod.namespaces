@@ -6,7 +6,7 @@ EV_NS_DEF_END(Asset)
 
 
 EV_NS_DEF_BEGIN(AssetManager)
-EV_NS_DEF_FN(void, mount, (CONST_STR, path), (CONST_STR, as))
+EV_NS_DEF_FN(void, mount, (evstring *, path), (evstring *, as))
 EV_NS_DEF_END(AssetManager)
 
 /* #include LOADERS_NAMESPACES_H */
