@@ -5,3 +5,7 @@ TYPE(AssetHandle, GenericHandle)
 TYPE(TextAsset, struct {
   evstring text;
 })
+
+TYPE(JSONAsset, struct {
+  PTR json_data;
+})

@@ -14,6 +14,7 @@ mod_src = [
 
   # Loaders
   'src/loaders/TextLoader/TextLoader.c',
+  'src/loaders/JSONLoader/JSONLoader.c',
 ]
 
 mod_incdir = [

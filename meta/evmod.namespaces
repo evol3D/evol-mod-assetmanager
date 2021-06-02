@@ -16,3 +16,10 @@ EV_NS_DEF_BEGIN(TextLoader)
 EV_NS_DEF_FN(TextAsset, loadAsset, (AssetHandle, handle))
 
 EV_NS_DEF_END(TextLoader)
+
+
+EV_NS_DEF_BEGIN(JSONLoader)
+
+EV_NS_DEF_FN(JSONAsset, loadAsset, (AssetHandle, handle))
+
+EV_NS_DEF_END(JSONLoader)

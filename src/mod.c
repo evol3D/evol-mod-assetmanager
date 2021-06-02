@@ -8,6 +8,7 @@
 
 #include "loaders/LoaderCommon.h"
 #include "loaders/TextLoader/TextLoader.h"
+#include "loaders/JSONLoader/JSONLoader.h"
 
 #define AssetSysCheck(...) do { \
   assetsys_error_t res = __VA_ARGS__; \
@@ -45,6 +46,16 @@ onRemoveTextAsset(
   }
 }
 
+void
+onRemoveJSONAsset(
+    ECSQuery query)
+{
+  JSONAsset *assets = ECS->getQueryColumn(query, sizeof(JSONAsset), 1);
+  for(int i = 0; i < ECS->getQueryMatchCount(query); i++) {
+    ev_jsonloader_jsonasset_destr(assets[i]);
+  }
+}
+
 EV_CONSTRUCTOR
 {
   static_assert(sizeof(AssetEntityID) == sizeof(AssetHandle), "AssetEntityID not the same size of AssetHandle");
@@ -62,6 +73,9 @@ EV_CONSTRUCTOR
 
       ev_textloader_setassettype(AssetECS->registerComponent("TextAsset", sizeof(TextAsset), EV_ALIGNOF(TextAsset)));
       AssetECS->setOnRemoveTrigger("TextAssetOnRemove", "TextAsset", onRemoveTextAsset);
+
+      ev_jsonloader_setassettype(AssetECS->registerComponent("JSONAsset", sizeof(JSONAsset), EV_ALIGNOF(JSONAsset)));
+      AssetECS->setOnRemoveTrigger("JSONAssetOnRemove", "JSONAsset", onRemoveJSONAsset);
     }
   }
 
@@ -157,6 +171,8 @@ EV_BINDINGS
   EV_NS_BIND_FN(Asset, free, ev_asset_free);
 
   EV_NS_BIND_FN(TextLoader, loadAsset, ev_textloader_loadasset);
+
+  EV_NS_BIND_FN(JSONLoader, loadAsset, ev_jsonloader_loadasset);
 
   return 0;
 }
