@@ -18,6 +18,7 @@ mod_src = [
   # Loaders
   'src/loaders/TextLoader/TextLoader.c',
   'src/loaders/JSONLoader/JSONLoader.c',
+  'src/loaders/MeshLoader/MeshLoader.c',
   'src/loaders/ShaderLoader/ShaderLoader.c',
 ]
 

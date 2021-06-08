@@ -10,6 +10,16 @@ TYPE(JSONAsset, struct {
   PTR json_data;
 })
 
+
+TYPE(MeshAsset, struct {
+  uint32_t vertexBuferSize;
+  uint32_t vertexCount;
+  float     *vertexData;
+
+  uint32_t  indexBuferSize;
+	uint32_t  indexCount;
+  uint32_t *indexData;
+
 TYPE(ShaderAssetStage, enum {
   EV_SHADERASSETSTAGE_VERTEX,
   EV_SHADERASSETSTAGE_FRAGMENT,
