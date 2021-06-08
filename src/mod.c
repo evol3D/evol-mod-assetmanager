@@ -9,6 +9,7 @@
 #include "loaders/LoaderCommon.h"
 #include "loaders/TextLoader/TextLoader.h"
 #include "loaders/JSONLoader/JSONLoader.h"
+#include "loaders/ShaderLoader/ShaderLoader.h"
 
 #define AssetSysCheck(...) do { \
   assetsys_error_t res = __VA_ARGS__; \
@@ -31,7 +32,7 @@ onRemoveAssetComponent(
     ECSQuery query)
 {
   Asset *assets = ECS->getQueryColumn(query, sizeof(Asset), 1);
-  for(int i = 0; i < ECS->getQueryMatchCount(query); i++) {
+  for(U32 i = 0; i < ECS->getQueryMatchCount(query); i++) {
     aligned_free(assets[i].data);
   }
 }
@@ -41,7 +42,7 @@ onRemoveTextAsset(
     ECSQuery query)
 {
   TextAsset *assets = ECS->getQueryColumn(query, sizeof(TextAsset), 1);
-  for(int i = 0; i < ECS->getQueryMatchCount(query); i++) {
+  for(U32 i = 0; i < ECS->getQueryMatchCount(query); i++) {
     ev_textloader_textasset_destr(assets[i]);
   }
 }
@@ -51,13 +52,24 @@ onRemoveJSONAsset(
     ECSQuery query)
 {
   JSONAsset *assets = ECS->getQueryColumn(query, sizeof(JSONAsset), 1);
-  for(int i = 0; i < ECS->getQueryMatchCount(query); i++) {
+  for(U32 i = 0; i < ECS->getQueryMatchCount(query); i++) {
     ev_jsonloader_jsonasset_destr(assets[i]);
+  }
+}
+
+void
+onRemoveShaderAsset(
+    ECSQuery query)
+{
+  ShaderAsset *assets = ECS->getQueryColumn(query, sizeof(ShaderAsset), 1);
+  for(U32 i = 0; i < ECS->getQueryMatchCount(query); i++) {
+    ev_shaderloader_shaderasset_destr(assets[i]);
   }
 }
 
 EV_CONSTRUCTOR
 {
+  ev_log_trace("evmod_asset constructor");
   static_assert(sizeof(AssetEntityID) == sizeof(AssetHandle), "AssetEntityID not the same size of AssetHandle");
 
   AssetManagerData.sys = assetsys_create( 0 );
@@ -76,8 +88,13 @@ EV_CONSTRUCTOR
 
       ev_jsonloader_setassettype(AssetECS->registerComponent("JSONAsset", sizeof(JSONAsset), EV_ALIGNOF(JSONAsset)));
       AssetECS->setOnRemoveTrigger("JSONAssetOnRemove", "JSONAsset", onRemoveJSONAsset);
+
+      ev_shaderloader_setassettype(AssetECS->registerComponent("ShaderAsset", sizeof(ShaderAsset), EV_ALIGNOF(ShaderAsset)));
+      AssetECS->setOnRemoveTrigger("ShaderAssetOnRemove", "ShaderAsset", onRemoveShaderAsset);
     }
   }
+
+  ev_shaderloader_init();
 
   return AssetManagerData.sys == NULL;
 }
@@ -92,6 +109,8 @@ EV_DESTRUCTOR
   if(AssetManagerData.ecs_mod) {
     evol_unloadmodule(AssetManagerData.ecs_mod);
   }
+
+  ev_shaderloader_deinit();
   return 0;
 }
 
@@ -165,6 +184,7 @@ ev_asset_markas(
 
 EV_BINDINGS
 {
+  ev_log_debug("Binding functions in evmod_asset");
   EV_NS_BIND_FN(AssetManager, mount, ev_assetmanager_mount);
 
   EV_NS_BIND_FN(Asset, load, ev_asset_load);
@@ -174,6 +194,8 @@ EV_BINDINGS
   EV_NS_BIND_FN(TextLoader, loadAsset, ev_textloader_loadasset);
 
   EV_NS_BIND_FN(JSONLoader, loadAsset, ev_jsonloader_loadasset);
+
+  EV_NS_BIND_FN(ShaderLoader, loadAsset, ev_shaderloader_loadasset);
 
   return 0;
 }

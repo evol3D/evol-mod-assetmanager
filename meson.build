@@ -1,6 +1,6 @@
-project('evol-mod-assetmanager', 'c',
+project('evol-mod-assetmanager', ['c', 'cpp'],
 version : '0.1',
-default_options : ['warning_level=3', 'c_std=c11'])
+default_options : ['warning_level=3', 'c_std=c11', 'default_library=shared'])
 
 src = subproject('evol').get_variable('evolmod_subdir') + '/meson.build'
 dst = meson.current_source_dir() + '/import/'
@@ -15,6 +15,7 @@ mod_src = [
   # Loaders
   'src/loaders/TextLoader/TextLoader.c',
   'src/loaders/JSONLoader/JSONLoader.c',
+  'src/loaders/ShaderLoader/ShaderLoader.c',
 ]
 
 mod_incdir = [
@@ -23,6 +24,9 @@ mod_incdir = [
 
 mod_deps = [
   evmod_deps,
+
+  dependency('shaderc'),
+  dependency('threads'),
 
   dependency('assetsys'),
   dependency('evmod_ecs'),

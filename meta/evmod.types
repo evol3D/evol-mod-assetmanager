@@ -9,3 +9,26 @@ TYPE(TextAsset, struct {
 TYPE(JSONAsset, struct {
   PTR json_data;
 })
+
+TYPE(ShaderAssetStage, enum {
+  EV_SHADERASSETSTAGE_VERTEX,
+  EV_SHADERASSETSTAGE_FRAGMENT,
+  EV_SHADERASSETSTAGE_COMPUTE,
+  EV_SHADERASSETSTAGE_GEOMETRY,
+
+  EV_SHADERASSETSTAGE_DETECT,
+
+  EV_SHADERASSETSTAGE_COUNT
+})
+
+TYPE(CompiledShaderType, enum {
+  EV_SHADER_ASM,
+  EV_SHADER_BIN
+})
+
+TYPE(ShaderAsset, struct {
+  PTR binary;
+  U64 len;
+  GenericHandle internal_handle;
+  CompiledShaderType type;
+})
