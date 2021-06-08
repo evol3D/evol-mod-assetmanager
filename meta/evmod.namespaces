@@ -23,3 +23,10 @@ EV_NS_DEF_BEGIN(JSONLoader)
 EV_NS_DEF_FN(JSONAsset, loadAsset, (AssetHandle, handle))
 
 EV_NS_DEF_END(JSONLoader)
+
+
+EV_NS_DEF_BEGIN(MeshLoader)
+
+EV_NS_DEF_FN(MeshAsset, loadAsset, (AssetHandle, handle))
+
+EV_NS_DEF_END(MeshLoader)
