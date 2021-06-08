@@ -1,0 +1,12 @@
+[wrap-file]
+directory = libshaderc
+
+source_url = https://storage.googleapis.com/shaderc/artifacts/prod/graphics_shader_compiler/shaderc/windows/continuous_release_2017/368/20210607-072143/install.zip
+source_filename = libshaderc-upstream-msvc.zip
+source_hash = 5256f02a11dceb3390edaabd452a23ee48c4fe7b43bca754de87738adea96255
+lead_directory_missing = libshaderc
+
+patch_directory = libshaderc
+
+[provide]
+dependency_names = shaderc_msvc

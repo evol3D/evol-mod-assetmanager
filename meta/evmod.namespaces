@@ -30,3 +30,10 @@ EV_NS_DEF_BEGIN(MeshLoader)
 EV_NS_DEF_FN(MeshAsset, loadAsset, (AssetHandle, handle))
 
 EV_NS_DEF_END(MeshLoader)
+
+
+EV_NS_DEF_BEGIN(ShaderLoader)
+
+EV_NS_DEF_FN(ShaderAsset, loadAsset, (AssetHandle, handle), (ShaderAssetStage, stage), (CONST_STR, shader_name), (CONST_STR, entrypoint), (CompiledShaderType, type))
+
+EV_NS_DEF_END(ShaderLoader)
