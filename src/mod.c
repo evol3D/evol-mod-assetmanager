@@ -12,10 +12,10 @@
 #include "loaders/MeshLoader/MeshLoader.h"
 #include "loaders/ShaderLoader/ShaderLoader.h"
 
-#define AssetSysCheck(...) do { \
+#define AssetSysCheck(errmsg_fmt, vars, ...) do { \
   assetsys_error_t res = __VA_ARGS__; \
   if(res != ASSETSYS_SUCCESS) { \
-    ev_log_error("`%s` failed. Error Message: %s", EV_STRINGIZE(__VA_ARGS__), assetsys_error_strings[res]); \
+    ev_log_error(errmsg_fmt"`%s` failed. Error Message: %s", EV_EXPAND(vars), EV_STRINGIZE(__VA_ARGS__), assetsys_error_strings[res]); \
   } \
 } while (0)
 
@@ -135,12 +135,12 @@ ev_asset_load(
     CONST_STR path)
 {
   assetsys_file_t file;
-  AssetSysCheck(assetsys_file(AssetManagerData.sys, path, &file));
+  AssetSysCheck("Failed to find file %s. ", (path), assetsys_file(AssetManagerData.sys, path, &file));
   Asset a;
   a.size = (I64)assetsys_file_size(AssetManagerData.sys, file);
   a.data = aligned_malloc(a.size + 1, 16);
   int loaded_size = 0;
-  AssetSysCheck(assetsys_file_load(AssetManagerData.sys, file, &loaded_size, a.data, a.size));
+  AssetSysCheck("Failed to load file %s. ", (path), assetsys_file_load(AssetManagerData.sys, file, &loaded_size, a.data, a.size));
   a.size = (I64) loaded_size;
   ((char*)a.data)[a.size] = '\0';
 
@@ -179,7 +179,7 @@ ev_assetmanager_mount(
   evstring *as)
 {
   evstring_pushstr(as, ":/");
-  AssetSysCheck(assetsys_mount(AssetManagerData.sys, *path, *as));
+  AssetSysCheck("Failed to mount %s as %s. ", (*path, *as), assetsys_mount(AssetManagerData.sys, *path, *as));
 }
 
 const Asset *
