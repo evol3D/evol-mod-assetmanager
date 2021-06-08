@@ -10,4 +10,5 @@ shaderc_dep = declare_dependency(
   include_directories: shaderc_inc,
 )
 
-meson.override_dependency('shaderc', shaderc_dep)
+meson.override_dependency('shaderc_msvc', shaderc_dep)
+meson.override_dependency('shaderc_clang', shaderc_dep)

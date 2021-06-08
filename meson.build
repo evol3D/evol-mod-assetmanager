@@ -7,6 +7,9 @@ dst = meson.current_source_dir() + '/import/'
 run_command( 'python3', meson.source_root() + '/subprojects/evol/buildscripts/copy.py', src, dst)
 subdir('import')
 
+cc = meson.get_compiler('c')
+cc_id = cc.get_id()
+
 subproject('evmod_ecs')
 
 mod_src = [
@@ -25,12 +28,17 @@ mod_incdir = [
 mod_deps = [
   evmod_deps,
 
-  dependency('shaderc'),
   dependency('threads'),
 
   dependency('assetsys'),
   dependency('evmod_ecs'),
 ]
+
+if cc_id == 'msvc'
+  mod_deps += dependency('shaderc_msvc')
+else
+  mod_deps += dependency('shaderc_clang')
+endif
 
 module = shared_module(
   'evmodassetmanager', mod_src,

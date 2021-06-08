@@ -2,11 +2,11 @@
 directory = libshaderc
 
 source_url = https://storage.googleapis.com/shaderc/artifacts/prod/graphics_shader_compiler/shaderc/linux/continuous_clang_release/364/20210607-072233/install.tgz
-source_filename = libshaderc-upstream.tgz
+source_filename = libshaderc-upstream-clang.tgz
 source_hash = f46dd35f6904af2b3330201ffb0f2f1ef5f8b8ede44491fad1a37b4a791772ef
 lead_directory_missing = libshaderc
 
 patch_directory = libshaderc
 
 [provide]
-dependency_names = shaderc
+dependency_names = shaderc_clang
