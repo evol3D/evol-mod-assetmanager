@@ -1,6 +1,8 @@
 #define EV_MODULE_DEFINE
 #include <evol/evolmod.h>
 #include <assetsys/assetsys.h>
+#include <cute_filewatch.h>
+
 #include <evol/utils/aligned_alloc.h>
 
 #define IMPORT_MODULE evmod_ecs
@@ -21,12 +23,15 @@
 
 struct {
   assetsys_t *sys;
+  filewatch_t *fwatch;
 
   evolmodule_t ecs_mod;
   ECSAssetWorldHandle world;
   AssetComponentID assetcomponent_id;
 
-} AssetManagerData = {NULL};
+} AssetManagerData = {
+  NULL, NULL, NULL, 
+  0, 0};
 
 void
 onRemoveAssetComponent(
@@ -85,6 +90,7 @@ EV_CONSTRUCTOR
   static_assert(sizeof(AssetEntityID) == sizeof(AssetHandle), "AssetEntityID not the same size of AssetHandle");
 
   AssetManagerData.sys = assetsys_create( 0 );
+  AssetManagerData.fwatch = filewatch_create(AssetManagerData.sys, NULL);
 
   AssetManagerData.ecs_mod = evol_loadmodule("ecs");
   if(AssetManagerData.ecs_mod) {
@@ -117,6 +123,7 @@ EV_CONSTRUCTOR
 
 EV_DESTRUCTOR
 {
+  filewatch_free(AssetManagerData.fwatch);
   assetsys_destroy(AssetManagerData.sys);
 
   if(AssetManagerData.world) {
@@ -179,7 +186,31 @@ ev_assetmanager_mount(
   evstring *as)
 {
   evstring_pushstr(as, ":/");
-  AssetSysCheck("Failed to mount %s as %s. ", (*path, *as), assetsys_mount(AssetManagerData.sys, *path, *as));
+  /* AssetSysCheck("Failed to mount %s as %s. ", (*path, *as), assetsys_mount(AssetManagerData.sys, *path, *as)); */
+  filewatch_mount(AssetManagerData.fwatch, *path, *as);
+}
+
+void
+ev_assetmanager_watch(
+  const char *path,
+  FN_PTR callback)
+{
+  filewatch_start_watching(AssetManagerData.fwatch, path, callback, NULL, 0);
+}
+
+void
+ev_assetmanager_watchrecursively(
+  const char *path,
+  FN_PTR callback)
+{
+  filewatch_start_watching(AssetManagerData.fwatch, path, callback, NULL, 1);
+}
+
+void
+ev_assetmanager_stopwatching(
+  const char *path)
+{
+  filewatch_stop_watching(AssetManagerData.fwatch, path);
 }
 
 const Asset *
@@ -198,10 +229,21 @@ ev_asset_markas(
   AssetECS->setComponent(AssetManagerData.world, handle, assetType, data);
 }
 
+void
+ev_assetmanager_update()
+{
+  filewatch_update(AssetManagerData.fwatch);
+  filewatch_notify(AssetManagerData.fwatch);
+}
+
 EV_BINDINGS
 {
   ev_log_debug("Binding functions in evmod_asset");
   EV_NS_BIND_FN(AssetManager, mount, ev_assetmanager_mount);
+  EV_NS_BIND_FN(AssetManager, watch, ev_assetmanager_watch);
+  EV_NS_BIND_FN(AssetManager, watchRecursively, ev_assetmanager_watchrecursively);
+  EV_NS_BIND_FN(AssetManager, stopWatching, ev_assetmanager_stopwatching);
+  EV_NS_BIND_FN(AssetManager, update, ev_assetmanager_update);
 
   EV_NS_BIND_FN(Asset, load, ev_asset_load);
   EV_NS_BIND_FN(Asset, cloneHandle, ev_asset_clonehandle);

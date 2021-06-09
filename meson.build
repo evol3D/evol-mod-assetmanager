@@ -30,8 +30,9 @@ mod_deps = [
   evmod_deps,
 
   dependency('threads'),
-
   dependency('assetsys'),
+  dependency('cute_filewatch'),
+
   dependency('evmod_ecs'),
 ]
 

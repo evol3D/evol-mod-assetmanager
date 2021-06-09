@@ -7,6 +7,10 @@ EV_NS_DEF_END(Asset)
 
 EV_NS_DEF_BEGIN(AssetManager)
 EV_NS_DEF_FN(void, mount, (evstring *, path), (evstring *, as))
+EV_NS_DEF_FN(void, update, (,))
+EV_NS_DEF_FN(void, watch, (CONST_STR, path), (FN_PTR, callback))
+EV_NS_DEF_FN(void, watchRecursively, (CONST_STR, path), (FN_PTR, callback))
+EV_NS_DEF_FN(void, stopWatching, (CONST_STR, path))
 EV_NS_DEF_END(AssetManager)
 
 /* #include LOADERS_NAMESPACES_H */
