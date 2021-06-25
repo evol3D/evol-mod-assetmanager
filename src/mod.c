@@ -13,6 +13,7 @@
 #include "loaders/JSONLoader/JSONLoader.h"
 #include "loaders/MeshLoader/MeshLoader.h"
 #include "loaders/ShaderLoader/ShaderLoader.h"
+#include "loaders/ImageLoader/ImageLoader.h"
 
 #define AssetSysCheck(errmsg_fmt, vars, ...) do { \
   assetsys_error_t res = __VA_ARGS__; \
@@ -63,6 +64,15 @@ onRemoveJSONAsset(
   }
 }
 
+// void
+// onRemoveImageAsset(
+//     ECSQuery query)
+// {
+//   ImageAsset *assets = ECS->getQueryColumn(query, sizeof(ImageAsset), 1);
+//   for(int i = 0; i < ECS->getQueryMatchCount(query); i++) {
+//     ev_imageloader_imageasset_destr(assets[i]);
+//   }
+// }
 
 // void
 // onRemoveMeshAsset(
@@ -107,6 +117,8 @@ EV_CONSTRUCTOR
       ev_jsonloader_setassettype(AssetECS->registerComponent("JSONAsset", sizeof(JSONAsset), EV_ALIGNOF(JSONAsset)));
       AssetECS->setOnRemoveTrigger("JSONAssetOnRemove", "JSONAsset", onRemoveJSONAsset);
 
+      ev_jsonloader_setassettype(AssetECS->registerComponent("ImageAsset", sizeof(ImageAsset), EV_ALIGNOF(ImageAsset)));
+      // AssetECS->setOnRemoveTrigger("ImageAssetOnRemove", "ImageAsset", onRemoveImageAsset);
 
       ev_jsonloader_setassettype(AssetECS->registerComponent("MeshAsset", sizeof(MeshAsset), EV_ALIGNOF(MeshAsset)));
       // AssetECS->setOnRemoveTrigger("MeshAssetOnRemove", "MeshAsset", onRemoveMeshAsset);
@@ -256,6 +268,8 @@ EV_BINDINGS
   EV_NS_BIND_FN(MeshLoader, loadAsset, ev_meshloader_loadasset);
 
   EV_NS_BIND_FN(ShaderLoader, loadAsset, ev_shaderloader_loadasset);
+
+  EV_NS_BIND_FN(ImageLoader, loadAsset, ev_imageloader_loadasset);
 
   return 0;
 }

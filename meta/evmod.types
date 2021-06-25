@@ -10,7 +10,6 @@ TYPE(JSONAsset, struct {
   PTR json_data;
 })
 
-
 TYPE(MeshAsset, struct {
   uint32_t vertexBuferSize;
   uint32_t vertexCount;
@@ -19,6 +18,20 @@ TYPE(MeshAsset, struct {
   uint32_t  indexBuferSize;
 	uint32_t  indexCount;
   uint32_t *indexData;
+})
+
+typedef enum {
+  EV_IMAGEFORMAT_RGBA8,
+  EV_IMAGEFORMAT_INVALID
+} EvImageFormat;
+
+TYPE(ImageAsset, struct {
+  uint32_t bufferSize;
+  uint32_t width;
+  uint32_t height;
+
+  EvImageFormat format;
+  PTR data;
 })
 
 TYPE(ShaderAssetStage, enum {
