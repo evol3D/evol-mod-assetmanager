@@ -43,9 +43,11 @@ else
 endif
 
 module = shared_module(
-  'evmodassetmanager', mod_src,
+  'assetmanager', mod_src,
   include_directories: mod_incdir,
   dependencies: mod_deps,
+  name_prefix: evmod_name_prefix,
+  name_suffix: evmod_name_suffix,
 )
 
 mod_dep = declare_dependency(
