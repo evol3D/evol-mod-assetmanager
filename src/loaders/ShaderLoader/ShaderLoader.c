@@ -1,5 +1,5 @@
-#define TYPE_MODULE evmod_assets
-#include <evol/meta/type_import.h>
+#define IMPORT_MODULE evmod_assets
+#include <evol/meta/module_import.h>
 #include <evol/common/ev_log.h>
 
 #include "../LoaderCommon.h"
@@ -12,11 +12,45 @@ struct {
   shaderc_compile_options_t compile_options;
 } ShaderLoaderData = {NULL,NULL};
 
+shaderc_include_result* _shader_include_resolve(
+    void* user_data, const char* requested_source, int type,
+    const char* requesting_source, size_t include_depth)
+{
+  EV_UNUSED_PARAMS(user_data, include_depth, requesting_source, type);
+
+  shaderc_include_result *result = malloc(sizeof(shaderc_include_result));
+  result->source_name = evstring_new(requested_source);
+  result->source_name_length = evstring_len((evstring)result->source_name);
+
+  AssetHandle assetHandle = Asset->load(requested_source);
+  TextAsset shaderAsset = TextLoader->loadAsset(assetHandle);
+
+  result->content = evstring_clone(shaderAsset.text);
+  result->content_length = evstring_len((evstring)result->content);
+
+  Asset->free(assetHandle);
+
+  return result;
+}
+
+void _shader_include_release(
+    void* user_data, shaderc_include_result* include_result)
+{
+  EV_UNUSED_PARAMS(user_data);
+
+  evstring_free((evstring)include_result->content);
+  evstring_free((evstring)include_result->source_name);
+  free(include_result);
+}
+
 void
 ev_shaderloader_init()
 {
+  evolmodule_t AssetMod = evol_loadmodule_weak("assetmanager");
+  imports(AssetMod, (Asset, TextLoader));
   ShaderLoaderData.compiler = shaderc_compiler_initialize();
   ShaderLoaderData.compile_options = shaderc_compile_options_initialize();
+  shaderc_compile_options_set_include_callbacks(ShaderLoaderData.compile_options, _shader_include_resolve, _shader_include_release, NULL);
 }
 
 void
