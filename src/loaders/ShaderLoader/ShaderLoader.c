@@ -55,7 +55,7 @@ ev_shaderloader_loadasset(
     CONST_STR entrypoint,
     CompiledShaderType type)
 {
-  const Asset *asset = ev_asset_getfromhandle(handle);
+  const AssetStruct *asset = ev_asset_getfromhandle(handle);
   ShaderCompilationFn compilation_fn = 
     (type == EV_SHADER_BIN)
       ?(ShaderCompilationFn)shaderc_compile_into_spv:

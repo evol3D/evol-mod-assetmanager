@@ -10,7 +10,7 @@ JSONAsset
 ev_jsonloader_loadasset(
     AssetHandle handle)
 {
-  const Asset *asset = ev_asset_getfromhandle(handle);
+  const AssetStruct *asset = ev_asset_getfromhandle(handle);
   JSONAsset inter = (JSONAsset) {
     .json_data = evjs_init(),
   };

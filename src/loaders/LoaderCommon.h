@@ -8,14 +8,14 @@ typedef struct {
 
   U32 ref_count;
   U32 ticks_left;
-} Asset;
+} AssetStruct;
 
 static struct {
   GenericHandle assetType;
 } LoaderData;
 
 
-const Asset *
+const AssetStruct *
 ev_asset_getfromhandle(
     AssetHandle handle);
 

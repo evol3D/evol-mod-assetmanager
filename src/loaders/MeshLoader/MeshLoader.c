@@ -17,7 +17,7 @@ MeshAsset
 ev_meshloader_loadasset(
     AssetHandle handle)
 {
-  const Asset *asset = ev_asset_getfromhandle(handle);
+  const AssetStruct *asset = ev_asset_getfromhandle(handle);
 
   uint32_t jsonLength = ((U32*)asset->data)[0];
   uint32_t blobLength = ((U32*)asset->data)[1];

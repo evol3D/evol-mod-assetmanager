@@ -38,7 +38,7 @@ void
 onRemoveAssetComponent(
     ECSQuery query)
 {
-  Asset *assets = ECS->getQueryColumn(query, sizeof(Asset), 1);
+  AssetStruct *assets = ECS->getQueryColumn(query, sizeof(AssetStruct), 1);
   for(U32 i = 0; i < ECS->getQueryMatchCount(query); i++) {
     aligned_free(assets[i].data);
   }
@@ -108,7 +108,7 @@ EV_CONSTRUCTOR
     if(AssetECS) {
       AssetManagerData.world = AssetECS->newWorld();
 
-      AssetManagerData.assetcomponent_id = AssetECS->registerComponent("Asset", sizeof(Asset), EV_ALIGNOF(Asset));
+      AssetManagerData.assetcomponent_id = AssetECS->registerComponent("Asset", sizeof(AssetStruct), EV_ALIGNOF(AssetStruct));
       AssetECS->setOnRemoveTrigger("AssetComponentOnRemove", "Asset", onRemoveAssetComponent);
 
       ev_textloader_setassettype(AssetECS->registerComponent("TextAsset", sizeof(TextAsset), EV_ALIGNOF(TextAsset)));
@@ -155,7 +155,7 @@ ev_asset_load(
 {
   assetsys_file_t file;
   AssetSysCheck("Failed to find file %s. ", (path), assetsys_file(AssetManagerData.sys, path, &file));
-  Asset a;
+  AssetStruct a;
   a.size = (I64)assetsys_file_size(AssetManagerData.sys, file);
   a.data = aligned_malloc(a.size + 1, 16);
   int loaded_size = 0;
@@ -175,7 +175,7 @@ AssetHandle
 ev_asset_clonehandle(
     AssetHandle handle)
 {
-  Asset *asset = AssetECS->getComponent(AssetManagerData.world, handle, AssetManagerData.assetcomponent_id);
+  AssetStruct *asset = AssetECS->getComponent(AssetManagerData.world, handle, AssetManagerData.assetcomponent_id);
   asset->ref_count++;
 
   return handle;
@@ -185,7 +185,7 @@ void
 ev_asset_free(
     AssetHandle handle)
 {
-  Asset *asset = AssetECS->getComponent(AssetManagerData.world, handle, AssetManagerData.assetcomponent_id);
+  AssetStruct *asset = AssetECS->getComponent(AssetManagerData.world, handle, AssetManagerData.assetcomponent_id);
   asset->ref_count--;
   if(asset->ref_count == 0) {
     AssetECS->destroyEntity(AssetManagerData.world, handle);
@@ -225,7 +225,7 @@ ev_assetmanager_stopwatching(
   filewatch_stop_watching(AssetManagerData.fwatch, path);
 }
 
-const Asset *
+const AssetStruct *
 ev_asset_getfromhandle(
     AssetHandle handle)
 {

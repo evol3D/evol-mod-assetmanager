@@ -9,7 +9,7 @@ TextAsset
 ev_textloader_loadasset(
     AssetHandle handle)
 {
-  const Asset *asset = ev_asset_getfromhandle(handle);
+  const AssetStruct *asset = ev_asset_getfromhandle(handle);
   TextAsset inter = (TextAsset) {
     .text = evstring_new(asset->data),
   };
