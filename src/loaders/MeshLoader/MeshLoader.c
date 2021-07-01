@@ -7,10 +7,11 @@
 #include "MeshLoader.h"
 
 typedef struct {
-  Vec4 pos;
-  Vec4 nor;
-  Vec4 col;
+  Vec4 position;
+  Vec4 normal;
   Vec4 uv;
+  Vec4 tangent;
+  Vec4 bitangent;
 } Vertex;
 
 MeshAsset
