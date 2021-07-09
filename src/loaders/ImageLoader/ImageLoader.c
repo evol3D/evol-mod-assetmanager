@@ -62,9 +62,17 @@ EvImageFormat
 strToFormat(
   evstr_ref str_ref)
 {
-  if(!strncmp(str_ref.data + str_ref.offset, "RGBA8", str_ref.len))
-    return EV_IMAGEFORMAT_RGBA8;
-
-  else
+  if(!strncmp(str_ref.data + str_ref.offset, "R8G8B8A8_SRGB", str_ref.len)) {
+    return EV_IMAGEFORMAT_R8G8B8A8_SRGB;
+  } else if(!strncmp(str_ref.data + str_ref.offset, "R8G8B8A8_UNORM", str_ref.len)) {
+    return EV_IMAGEFORMAT_R8G8B8A8_UNORM;
+  } else if(!strncmp(str_ref.data + str_ref.offset, "R8G8B8_UNORM", str_ref.len)) {
+    return EV_IMAGEFORMAT_R8G8B8_UNORM;
+  } else if(!strncmp(str_ref.data + str_ref.offset, "R8G8B8_SRGB", str_ref.len)) {
+    return EV_IMAGEFORMAT_R8G8B8_SRGB;
+  } else if(!strncmp(str_ref.data + str_ref.offset, "R32G32B32A32_SFLOAT", str_ref.len)) {
+    return EV_IMAGEFORMAT_R32G32B32A32_SFLOAT;
+  } else {
     return EV_IMAGEFORMAT_INVALID;
+  }
 }

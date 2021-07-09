@@ -22,6 +22,7 @@ ev_meshloader_loadasset(
 
   uint32_t jsonLength = ((U32*)asset->data)[0];
   uint32_t blobLength = ((U32*)asset->data)[1];
+  (void)blobLength;
 
   const char *json = (PTR)(&((U32*)asset->data)[2]);
   const void *data = json + jsonLength;
@@ -51,7 +52,7 @@ void
 ev_meshloader_textasset_destr(
     MeshAsset mesh)
 {
-
+  EV_UNUSED_PARAMS(mesh);
 }
 
 void
